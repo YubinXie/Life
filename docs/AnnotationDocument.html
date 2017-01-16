@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Yubin Xie" />
+
+<meta name="date" content="2017-01-09" />
+
+<title>Document for Variant Annotation</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-1.1/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 66px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+
+.section h2 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h3 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h4 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h5 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h6 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">A new project</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/jdblischak/workflowr">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Genomics Box</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/YubinXie/Genomics-Box">
+    <span><img src="pic.jpg" alt="" height="20" width="20"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<h1 class="title toc-ignore"></h1><br></h1>
+
+
+</div>
+
+<style type="text/css">
+#TOC {
+  margin-left: 35px;
+  margin-top: 90px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Document for Variant Annotation</h1>
+<h4 class="author"><em>Yubin Xie</em></h4>
+<h4 class="date"><em>January 09, 2017</em></h4>
+
+</div>
+
+
+<p><strong>Last updated:</strong> January 15, 2017</p>
+<div id="introduction" class="section level1">
+<h1><span class="header-section-number">1</span> Introduction</h1>
+<p>Welocme to my document for variants annotation. In this documents, I listed worflow, tools and database inforamtion for variants annotation. So far, it supports:</p>
+<ul>
+<li>Data acquisition and decryption
+<ul>
+<li>NCBI dbGaP data</li>
+</ul></li>
+<li>VCF file processing
+<ul>
+<li>Multi-allelic line separation</li>
+<li>Case and control samples separation</li>
+</ul></li>
+<li>Annotation
+<ul>
+<li>Gene-, region- and filter-based annotation by ANNOVAR</li>
+<li>Custom-made region-based annotion</li>
+<li>Genename-based annotion</li>
+<li>Allele counts/frequency calculation</li>
+</ul></li>
+<li>Functional scripts
+<ul>
+<li>Annotation results binding</li>
+</ul></li>
+</ul>
+<p>I will keep updating this document and I hope it can help you in your research.</p>
+</div>
+<div id="data-acquisition-and-decryption" class="section level1">
+<h1><span class="header-section-number">2</span> Data acquisition and decryption</h1>
+<p><strong>Background:</strong></p>
+<p>Genomic information contains individal health and identity information. Therefore measures such as authorized access, encryption are performed to ensure that individuals’ privacy is protected. Here I take NCBI dbGaP data as an example.</p>
+<p><strong>Method:</strong></p>
+<ul>
+<li><p>To begin with, supervisors, who are identified as principal investigators (PIs) by eRA Commons system, should request access by NCBI authorized access system (see detailed instruction at: <a href="https://dbgap.ncbi.nlm.nih.gov/aa/wga.cgi?login=&amp;page=login">dbGaP Authorized Access</a>)</p></li>
+<li><p>Once being granted access to the data you apply for, you can download it and then decrypt it. The desryption precess is complex. First of all, log in PI NCBI dbGaP account and download the specific dbGap repository key for the data that you requested. Then download the <a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=software">SRA Toolkit</a>. Next comes the crucial but diffcult step: SRA Toolkit configuration. Detailed offical instruction can be found at: <a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=toolkit_doc&amp;f=dbgap_use">SRA Toolkit Documentation - Protected Data Usage Guide</a>. Here the only thing that I’d like to emphasize is that “your decryption commend is not valid if you current directory is not”import project directory“, which is set during SRA Toolkit configuration”</p></li>
+</ul>
+</div>
+<div id="multi-allelic-line-separation" class="section level1">
+<h1><span class="header-section-number">3</span> Multi-allelic line separation</h1>
+<p><strong>Background:</strong></p>
+<p>So far, you should be able to get access to the Variant Call Format (VCF) that contains structural variants, which most of the case, is compressed). A standard VCF file contains meta-information lines, a header line, and then data lines each containing information about a position in the genome. Genotype information of one or multiple samples for each position will be included in that specific line.</p>
+<p>The old VCF formats required multiple alleles in the same line while latest VCF formats (4.1+) start to allow for a single loci to cover multiple rows when there are multiple alleles. Two standards are always the source of problems. During annotation, some tools, eg. annovar, will split multiple alleles in the one line into multiple rows automatically. While others, eg. vcftools, will keep multiple alleles in one line (at least, for latest version of these tools). So problems come when we try to combine annotation results that are generated by different tools. The best way to prevent such problem is to convert multiple alleles in one row into multiple rows.</p>
+<p><strong>Method:</strong></p>
+<ul>
+<li><a href="http://www.htslib.org/download/">BCFtools</a> <code>norm</code> argument can achieve to convert multiple alleles in one row into multiple rows.</li>
+</ul>
+<pre><code>bcftools norm -m -both filename.vcf.gz -o outputfilename</code></pre>
+<p><code>norm</code> function in BCFtools is designed to normalize indels in VCF files. It is able to Left-align and normalize indels, check if REF alleles match the reference, split multiallelic sites into multiple rows; recover multiallelics from multiple rows.<code>-m, --multiallelics -|+[snps|indels|both|any]</code> can split multiallelic sites into biallelic records (by add <code>-</code> after <code>-m</code>) or join biallelic sites into multiallelic records (<code>+</code>). The split or merged object can be specified by a string: <code>snps</code> or <code>indels</code> or <code>both</code> or<code>any</code>. For merging, if use <code>both</code> SNPs and indels will be merged separately into two records; if <code>any</code> SNPs and indels will be merged into a single record. As for spliting, I used <code>both</code> when spliting the multiple alleles. All the multiallelic sites are split into multiple rows. I have not tried any for spliting yet. See more details at <a href="http://www.htslib.org/doc/bcftools.html">BCF Tools Offical documentation</a>. Though another tool, VCFlib, can also do similar job, it will lost sample information of other alleles that in one loci. As a result, when couting total chromsomes of one specific allele, the chromsomes of sample with other alleles in the same loci will not be counted to total chromsomes. So I would recommand BCFtools.</p>
+</div>
+<div id="general-annotation" class="section level1">
+<h1><span class="header-section-number">4</span> General annotation</h1>
+<div id="gene--and-filter-based-annotation" class="section level2">
+<h2><span class="header-section-number">4.1</span> Gene- and filter-based annotation</h2>
+<blockquote>
+<p>ANNOVAR is an efficient software tool to utilize update-to-date information to functionally annotate genetic variants detected from diverse genomes – <a href="http://annovar.openbioinformatics.org/en/latest">ANNOVAR documentation</a></p>
+</blockquote>
+<div id="preparetion-of-input-files" class="section level3">
+<h3><span class="header-section-number">4.1.1</span> Preparetion of input files</h3>
+<p><strong>Background:</strong></p>
+<p>ANNOVAR is a popular tool for variants annotation. It requires specific format, which is ANNOVAR input format (avinput). In that file, each line corresponds to one variant (no multiple alleles in one line. On each line, the first five space- or tab- delimited columns represent chromosome, start position, end position, the reference nucleotides and the observed nucleotides. Additonal columns are supported and will be included in the later process. Recently, VCF has been the most widely used “genotype calling” format. Transformation of format is needed.</p>
+<p><strong>Method:</strong></p>
+<ul>
+<li>The <code>convert2annovar.pl</code> script in ANNOVAR can convert other “genotype calling” format, eg. VCF, into ANNOVAR input format. The <code>-format vcf4</code> can be used to convert VCF files into ANNOVAR input files.</li>
+</ul>
+<pre><code>perl convert2annovar.pl -format vcf4 infilename.vcf -outfile outfilename.avinput</code></pre>
+<p>In fact, the input file can also be <code>vcf.gz</code> format. The <code>convert2annovar.pl</code> script can calculate allelic frequency but not in a reasonal way. Allele frequency is defined as: (number of certain allele) / (total allele number). However, ANNOVAR calculates allelic frequency as: <span class="math inline">\((number of certain allele)/(total sample number *2)\)</span>. <span class="math inline">\(Total sample number *2 = total chromsome number = total detected allele number + total missing genotype information allele number\)</span>. Sometimes the allele number that lacks genotype information takes a large proportion of total chromsome number, which makes ANNOVAR calculated frequency inaccurate. I will introduce better tools later that calculate allele frequency. In this case, we do not need sample information in our ANNOVAR annotation, which usually contains 1000+ columns and makes the file heavy. So you can crop the VCF file before annotation or do not keep sample information during format conversion. If you want to keep sample and other information besides the first 5 columns during conversion, add <code>-allsample -includeinfo</code>.</p>
+</div>
+<div id="multi-annotation" class="section level3">
+<h3><span class="header-section-number">4.1.2</span> Multi-annotation</h3>
+<p>Once the ANNOVAR input file is ready, we can start annotate the variants. ANNOVAR can perform gene-based annotation, region-based annotation and filter-based annotation with downloaded appropriate databases. Detailed annotation function and aviable database can be found in ANNOVAR documentation. First step is to download the database you need and then perform the annotation you want.</p>
+<p><strong>Method:</strong></p>
+<ul>
+<li>Here is an example from <a href="http://annovar.openbioinformatics.org/en/latest">ANNOVAR documentation</a>.</li>
+</ul>
+<pre><code>perl annotate_variation.pl -buildver hg19 -downdb -webfrom annovar refGene humandb
+perl annotate_variation.pl -buildver hg19 -downdb cytoBand humandb/
+perl annotate_variation.pl -buildver hg19 -downdb genomicSuperDups humandb/
+perl annotate_variation.pl -buildver hg19 -downdb -webfrom annovar esp6500siv2_all humandb/
+perl annotate_variation.pl -buildver hg19 -downdb -webfrom annovar 1000g2015aug humandb/
+perl annotate_variation.pl -buildver hg19 -downdb -webfrom annovar exac03 humandb/
+perl annotate_variation.pl -buildver hg19 -downdb -webfrom annovar avsnp147 humandb/ 
+perl annotate_variation.pl -buildver hg19 -downdb -webfrom annovar dbnsfp30a humandb/
+perl table_annovar.pl infilename.avinput humandb/ -buildver hg19 -out myanno -remove -protocol refGene,cytoBand,genomicSuperDups,esp6500siv2_all,1000g2015aug_all,1000g2015aug_eur,exac03,avsnp147,dbnsfp30a -operation g,r,r,f,f,f,f,f,f -nastring . -csvout</code></pre>
+<p>In practice, error came out when I performed the the last command line on my data. It did not specify the reason but I guess that it cound because I perform too mauch annotation on a large file (6746960 lines). So I deleted unnecessary annotation like all the region annotation and performed avsnp147 separately. You can always perform the annotation one by one and combine them later.</p>
+</div>
+</div>
+<div id="sample-allele-counts-frequency-calculation" class="section level2">
+<h2><span class="header-section-number">4.2</span> Sample allele counts &amp; frequency calculation</h2>
+<div id="split-samples-into-case-and-control-group" class="section level3">
+<h3><span class="header-section-number">4.2.1</span> Split samples into case and control group</h3>
+<p><strong>Background:</strong></p>
+<p>Sometimes, case and control samples are mixed in one VCF file, which requires preprocess to split them. Our Strategy is that 1) firstly get the name and order list of case and control sample respectively; 2) then split the VCF file into two files according to the information in previous list.</p>
+<p><strong>Method:</strong></p>
+<ul>
+<li>I developed a <a href="https://github.com/YubinXie/Variant_Annotation/blob/master/case-control.py">case-control.py</a> python script to achieve the whole process. In the python script, I firstly take case and control sample name list according their name pattern (in my file, case name starts with A while control B) from cropped VCF file which only contains header inforamtion. Then I call <a href="http://www.htslib.org/doc/bcftools.html">BCFTools</a> <code>view</code> argument to split the target file in python.</li>
+</ul>
+<pre><code>bcftools view -s CaseNameString infilename.vcf.gz | bgzip -c &gt; outfilename_case.vcf.gz
+bcftools view -s ControlNameString infilename.vcf.gz | bgzip -c &gt; outfilename_control.vcf.gz</code></pre>
+<p>Though VCF-subset tool can do similar thing, it is much slower than BCFTools. My vcf.gz file is 60 GB, vcf-subset can only process 600MB in 1 hour while BCFTools can handle around 10 GB in 1 hour.</p>
+</div>
+<div id="calculate-allele-counts-and-frequency" class="section level3">
+<h3><span class="header-section-number">4.2.2</span> Calculate allele counts and frequency</h3>
+<p><strong>Method:</strong></p>
+<ul>
+<li><a href="https://vcftools.github.io/man_latest.html">VCFTools</a> can accurately calculate sample allele counts and frequency.</li>
+</ul>
+<pre><code>vcftools --gzvcf infilename.vcf.gz --freq —recode —recode-INFO-all --out outfilename_freq
+vcftools --gzvcf infilename.vcf.gz --counts —recode —recode-INFO-all --out outfilename_counts</code></pre>
+<p>It took around 40 min for my PC to calculate counts/frequency for 60 GB vcf.gz file.</p>
+</div>
+</div>
+</div>
+<div id="custom-made-annotation" class="section level1">
+<h1><span class="header-section-number">5</span> Custom-made annotation</h1>
+<p><strong>Background:</strong></p>
+<p>Annotation with custom-made dataset sometimes is required for researchers. Here I list some methods based on my own experience.</p>
+<div id="region-based-annotation-by-annovar" class="section level2">
+<h2><span class="header-section-number">5.1</span> Region-based annotation by ANNOVAR</h2>
+<p><strong>Background:</strong> Our lab member developed a exon constrain score matrix, which contains information of exon location and its constarin score. Region-based annotation of ANNOVAR can be used to annotate VCF file with that data. This function requires <strong>bed</strong> format as the input file, with at least first three cols being chrom, chromStart, chromEnd.</p>
+<p><strong>Method:</strong></p>
+<ul>
+<li>Code as following is used:</li>
+</ul>
+<pre><code>table_annovar.pl -buildver hg19 -protocol bed infilename.avinput -operation r -nastring . humandb/ -otherinfo -bedfile filename.bed -arg &#39;-colsWanted 20’</code></pre>
+<p>In this code, the column information that you want to include in the annotation should be specified in <code>-arg '-colsWanted colnumber'</code> , where colnumber is the number of that column.</p>
+</div>
+<div id="gene-name-based-annotion" class="section level2">
+<h2><span class="header-section-number">5.2</span> Gene-name-based annotion</h2>
+<p><strong>Background:</strong></p>
+<p>Gene expression level data is from GTEx and is in GCT format.</p>
+<p><strong>Method:</strong></p>
+<ul>
+<li>Annotation with <a href="http://www.gtexportal.org/home/datasets">Gene expression in heart</a> by <a href="https://github.com/YubinXie/Variant_Annotation/blob/master/GCTexpression_annotation.py">GCTexpression_annotation.py</a>:</li>
+</ul>
+<pre><code>python GCTexpression_annotation.py GeneAnnotatedFile ExpressionDataFile OutputFile</code></pre>
+<p>Note: This script calculated the average gene expression of several organs listed in the file and annotated variants based on gene name. The GeneAnnotatedFile here is a CSV file that was annotated by ref.gene.</p>
+</div>
+</div>
+<div id="integrating-multi-annotation" class="section level1">
+<h1><span class="header-section-number">6</span> Integrating multi-annotation</h1>
+<p><strong>Background:</strong></p>
+<p>So far, we have generated multiple text-based annotated files. Our final step is to combine them into one file.</p>
+<p><strong>Method:</strong></p>
+<ul>
+<li>I developed a <a href="https://github.com/YubinXie/Variant_Annotation/blob/master/Annotation.R">BindingAnnotation.R</a> R script that allows you to combine specific columns of chosen files into one file. You can simplely add or change the file and column number to achieve that.</li>
+</ul>
+</div>
+<div id="supporting-information" class="section level1">
+<h1><span class="header-section-number">7</span> Supporting information</h1>
+<div id="tools-information" class="section level2">
+<h2><span class="header-section-number">7.1</span> Tools information</h2>
+<p><strong><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=toolkit_doc&amp;f=std">SRAToolkit</a>:</strong> Tools to decrypt protected data from dbGaP.</p>
+<p><strong><a href="https://vcftools.github.io/man_latest.html">VCFTools</a>:</strong> Utilities for the variant call format (VCF) and binary variant call format (BCF).</p>
+<p><strong><a href="http://www.htslib.org/doc/bcftools.html">BCFTools</a>:</strong> BCFtools is a set of utilities that manipulate variant calls in the Variant Call Format (VCF) and its binary counterpart BCF.</p>
+<p><strong><a href="http://annovar.openbioinformatics.org/en/latest/">ANNOVAR</a>:</strong> ANNOVAR is an efficient software tool to utilize update-to-date information to functionally annotate genetic variants detected from diverse genomes.</p>
+<p><strong><a href="https://github.com/YubinXie/Variant_Annotation/blob/master/case-control.py">case-control.py</a>:</strong> Python script to split samples into case and control group.</p>
+<p><strong><a href="https://github.com/YubinXie/Variant_Annotation/blob/master/GCTexpression_annotation.py">GCTexpression_annotation.py</a>:</strong> Python script to do gene-name-based annotation, eg. gene expression.</p>
+<p><strong><a href="https://github.com/YubinXie/Variant_Annotation/blob/master/Annotation.R">BindingAnnotation.R</a>:</strong> R script to bind differernt annotation results.</p>
+</div>
+<div id="annotation-database" class="section level2">
+<h2><span class="header-section-number">7.2</span> Annotation database</h2>
+<p><strong><a href="http://annovar.openbioinformatics.org/en/latest/user-guide/startup/">General annotation</a>:</strong> From ANNOVAR. Database includes: refGene, esp6500siv2_all, 1000g2015aug, exac03, avsnp147, dbnsfp30a. Get the database by following code:</p>
+<pre><code>perl annotate_variation.pl -buildver hg19 -downdb -webfrom annovar refGene humandb
+perl annotate_variation.pl -buildver hg19 -downdb -webfrom annovar esp6500siv2_all humandb/
+perl annotate_variation.pl -buildver hg19 -downdb -webfrom annovar 1000g2015aug humandb/
+perl annotate_variation.pl -buildver hg19 -downdb -webfrom annovar exac03 humandb/
+perl annotate_variation.pl -buildver hg19 -downdb -webfrom annovar avsnp147 humandb/ 
+perl annotate_variation.pl -buildver hg19 -downdb -webfrom annovar dbnsfp30a humandb</code></pre>
+<p><strong><a href="https://github.com/YubinXie/AnnotateR/tree/master/Exac_Exon_Constraint">Missense Exon constrain score</a>:</strong> From Nick. It is on the metric defined in page 29 of this <a href="http://www.nature.com/nature/journal/v536/n7616/extref/nature19057-s1.pdf">supplement</a>. Click the name and get the data from GitHub.</p>
+<p><strong><a href="http://www.gtexportal.org/home/datasets">Gene expression in heart</a>:</strong> From GTEx. The file contains the median RPKM by tissue. These medians were calculated from unnormalized RPKMs, directly from the file GTEx_Analysis_v6p_RNA-seq_RNA-SeQCv1.1.8_gene_rpkm.gct.gz. Click the name and download it from GTEx.</p>
+</div>
+</div>
+<div id="acknowledgement" class="section level1">
+<h1><span class="header-section-number">8</span> Acknowledgement</h1>
+<p>Here I’d like to thank Nicholas Knoblauch for trouble-shooting on various probelms all the way.</p>
+</div>
+<div id="contact" class="section level1">
+<h1><span class="header-section-number">9</span> Contact</h1>
+<p>If you have any questions or suggestion, contact me by email: <a href="mailto:yoobintse@gmail.com">yoobintse@gmail.com</a>.</p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
